@@ -1,5 +1,6 @@
 package com.itkloud.noteplus;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ public class MainActivity extends ActionBarActivity {
     private NoteDao noteDao;
     private NoteAdapter noteAdapter;
 
+    private static final int ACTIVITY_NEW_NOTE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +49,9 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void addNewNote(View v){
-        Note n = new Note();
-        n.setId(38);
-        n.setBody("Nota roja");
-        n.setTitle("Nueva");
-        n.setColor("#FF0000");
-        n.setDate(new Date());
-        noteAdapter.addNewNote(n);
+        Intent intent = new Intent(this,EditActivity.class);
+
+        startActivityForResult(intent,ACTIVITY_NEW_NOTE);
     }
 
     @Override
@@ -61,6 +59,21 @@ public class MainActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == ACTIVITY_NEW_NOTE) {
+            Note n = new Note();
+            n.setBody(data.getExtras().getString("body"));
+            n.setTitle(data.getExtras().getString("title"));
+            n.setColor("#00FF00");
+            n.setDate(new Date());
+            n.setFav(false);
+
+            noteAdapter.addNewNote(n);
+        }
     }
 
     @Override
