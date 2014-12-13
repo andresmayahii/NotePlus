@@ -10,10 +10,20 @@ import android.widget.EditText;
 
 public class EditActivity extends ActionBarActivity {
 
+    private int idNote;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+
+        Intent intent = getIntent();
+
+        idNote = intent.getExtras().getInt("id");
+        if(idNote != 0) {
+            ((EditText) findViewById(R.id.notaEditTitle)).setText(intent.getExtras().getString("title"));
+            ((EditText) findViewById(R.id.notaEditBody)).setText(intent.getExtras().getString("body"));
+        }
     }
 
 
@@ -39,7 +49,7 @@ public class EditActivity extends ActionBarActivity {
             Intent intent = new Intent();
             intent.putExtra("title",((EditText) findViewById(R.id.notaEditTitle)).getText().toString());
             intent.putExtra("body",((EditText) findViewById(R.id.notaEditBody)).getText().toString());
-
+            intent.putExtra("id",idNote);
             setResult(200,intent);
             finish();
 

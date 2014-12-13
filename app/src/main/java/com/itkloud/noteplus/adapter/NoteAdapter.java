@@ -1,14 +1,18 @@
 package com.itkloud.noteplus.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.itkloud.noteplus.EditActivity;
+import com.itkloud.noteplus.MainActivity;
 import com.itkloud.noteplus.R;
 import com.itkloud.noteplus.dao.NoteDao;
 import com.itkloud.noteplus.dto.Note;
@@ -20,7 +24,7 @@ import java.util.List;
 /**
  * Created by andressh on 26/11/14.
  */
-public class NoteAdapter extends BaseAdapter implements ListAdapter {
+public class NoteAdapter extends BaseAdapter implements ListAdapter, AdapterView.OnItemClickListener {
 
     private Activity parent;
     private NoteDao noteDao;
@@ -85,5 +89,18 @@ public class NoteAdapter extends BaseAdapter implements ListAdapter {
         bodyView.setText(n.getBody());
 
         return convertView;
+    }
+
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Note n = (Note) getItem(position);
+
+        Intent intent = new Intent(this.parent,EditActivity.class);
+        intent.putExtra("title",n.getTitle());
+        intent.putExtra("body",n.getBody());
+        intent.putExtra("id",n.getId());
+        this.parent.startActivityForResult(intent, MainActivity.ACTIVITY_NEW_NOTE);
+
     }
 }

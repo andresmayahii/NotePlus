@@ -25,7 +25,7 @@ public class MainActivity extends ActionBarActivity {
     private NoteDao noteDao;
     private NoteAdapter noteAdapter;
 
-    private static final int ACTIVITY_NEW_NOTE = 100;
+    public static final int ACTIVITY_NEW_NOTE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +37,10 @@ public class MainActivity extends ActionBarActivity {
 
         noteAdapter = new NoteAdapter(this,noteDao);
 
+
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(noteAdapter);
-
+        listView.setOnItemClickListener(noteAdapter);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void addNewNote(View v){
         Intent intent = new Intent(this,EditActivity.class);
-
+        intent.putExtra("id",0);
         startActivityForResult(intent,ACTIVITY_NEW_NOTE);
     }
 
@@ -66,6 +67,7 @@ public class MainActivity extends ActionBarActivity {
 
         if(requestCode == ACTIVITY_NEW_NOTE) {
             Note n = new Note();
+            n.setId(data.getExtras().getInt("id"));
             n.setBody(data.getExtras().getString("body"));
             n.setTitle(data.getExtras().getString("title"));
             n.setColor("#00FF00");
