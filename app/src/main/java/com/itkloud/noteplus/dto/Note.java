@@ -89,9 +89,11 @@ public class Note implements Comparable<Note>,Serializable {
     public int compareTo(Note note) {
         if(this.getId() == note.getId()) return 0;
         if(this.fav && !note.fav) return 1;
-        else if(this.getDate().getTime() > note.getDate().getTime()) return 1;
-        else if(this.getDate().getTime() < note.getDate().getTime()) return -1;
-        else return this.getId() - note.getId();
+        if(this.getDate() != null && note.getDate() != null) {
+            if(this.getDate().getTime() > note.getDate().getTime()) return 1;
+            else if(this.getDate().getTime() < note.getDate().getTime()) return -1;
+        }
+        return this.getId() - note.getId();
     }
 
     @Override

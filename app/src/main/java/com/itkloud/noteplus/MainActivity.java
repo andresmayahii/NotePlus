@@ -1,5 +1,8 @@
 package com.itkloud.noteplus;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -8,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
 import com.itkloud.noteplus.adapter.NoteAdapter;
@@ -18,7 +22,7 @@ import com.itkloud.noteplus.dto.Note;
 import java.util.Date;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 
@@ -41,6 +45,23 @@ public class MainActivity extends ActionBarActivity {
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(noteAdapter);
         listView.setOnItemClickListener(noteAdapter);
+        listView.setOnItemLongClickListener(noteAdapter);
+        //listView.setOnitem//
+        //listView.setOnClickListener(this);
+    }
+
+
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        Toast.makeText(this, "* Click al elemento " + item.toString(), Toast.LENGTH_SHORT).show();
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 
     @Override
@@ -50,9 +71,11 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void addNewNote(View v){
+
         Intent intent = new Intent(this,EditActivity.class);
         intent.putExtra("id",0);
         startActivityForResult(intent,ACTIVITY_NEW_NOTE);
+
     }
 
     @Override

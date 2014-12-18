@@ -1,8 +1,12 @@
 package com.itkloud.noteplus.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -10,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.itkloud.noteplus.EditActivity;
 import com.itkloud.noteplus.MainActivity;
@@ -24,7 +29,7 @@ import java.util.List;
 /**
  * Created by andressh on 26/11/14.
  */
-public class NoteAdapter extends BaseAdapter implements ListAdapter, AdapterView.OnItemClickListener {
+public class NoteAdapter extends BaseAdapter implements ListAdapter, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private Activity parent;
     private NoteDao noteDao;
@@ -41,6 +46,13 @@ public class NoteAdapter extends BaseAdapter implements ListAdapter, AdapterView
         update();
     }
 
+    public void deleteNote(int idNote) {
+        Note n = new Note();
+        n.setId(idNote);
+        noteDao.delete(n);
+        update();
+    }
+
     private void update() {
         notes = noteDao.getAll();
 
@@ -52,6 +64,50 @@ public class NoteAdapter extends BaseAdapter implements ListAdapter, AdapterView
         } else {
             noNotes.setVisibility(View.INVISIBLE);
         }
+
+
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        deleteNote(this.parent,position);
+        return false;
+    }
+
+    public void deleteNote(final Context context,final int position) {
+
+        final NoteAdapter na = this;
+
+        try {
+            AlertDialog.Builder ad = new AlertDialog.Builder(context);
+            ad.setTitle(parent.getString(R.string.hello_world));
+            ad.setMessage("Estas seguro que quieres eliminar la nota");
+            ad.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    na.deleteNote((int)na.getItemId(position));
+                    Toast.makeText(context, "Se elimino la nota " + position, Toast.LENGTH_SHORT).show();
+
+                }
+            });
+            ad.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+            ad.show();
+        } catch(Exception e) {
+            Toast.makeText(parent,"No se pudo eliminar la nota",Toast.LENGTH_SHORT).show();
+            Log.e("MainActivity", "No se espera una exception", e);
+        }
+
+        /*
+            new AlertDialog.Builder(context).
+                setTitle().
+                setMessage().
+                ....
+                show();
+        */
 
 
     }
